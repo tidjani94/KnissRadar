@@ -18,7 +18,7 @@
 | #1 | Scaffold MV3 project with Vite + React + Tailwind + TypeScript | @tidjani94 | Done |
 | #2 | Implement Shadow DOM injection on listing pages | @tidjani94 | Done |
 | #3 | Build GraphQL interceptor for listing data | @tidjani94 | Done |
-| #4 | DOM fallback extractor with versioned selectors | — | Not started |
+| #4 | DOM fallback extractor with versioned selectors | @tidjani94 | Done |
 | #5 | Build PriceGraph widget with Chart.js | — | Not started |
 | #6 | Build TrackPriceDrop form | — | Not started |
 | #7 | Local storage watchlist with chrome.storage.local | — | Not started |

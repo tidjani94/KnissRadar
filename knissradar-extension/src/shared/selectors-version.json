@@ -1,0 +1,48 @@
+{
+  "version": "3.5.25",
+  "extractedAt": "2026-07-21",
+  "selectors": {
+    "title": [
+      "h1.announcement-title",
+      "[class*='announcement'] h1",
+      "main h1",
+      "h1"
+    ],
+    "price": [
+      ".announcement-price",
+      "[class*='price']:not([class*='old'])",
+      "[data-testid='price']",
+      ".text-primary.font-bold"
+    ],
+    "oldPrice": [
+      ".announcement-old-price",
+      "[class*='old-price']",
+      "[class*='line-through']",
+      "del"
+    ],
+    "city": [
+      ".announcement-city",
+      "[class*='location']",
+      "[class*='city']",
+      "[data-testid='city']"
+    ],
+    "store": [
+      ".announcement-store a",
+      "[class*='store'] a",
+      "[class*='shop'] a",
+      "a[href*='/store/']"
+    ],
+    "category": [
+      ".announcement-category a",
+      "[class*='category'] a",
+      "nav a[href*='/annonce/']"
+    ],
+    "specs": [
+      ".announcement-specs .spec-row",
+      "[class*='specs'] [class*='row']",
+      "table tr",
+      "[class*='detail'] [class*='item']"
+    ]
+  },
+  "notes": "Updated 2026-07-21 for Ouedkniss v3.5.25 layout. Selectors ordered by reliability."
+}

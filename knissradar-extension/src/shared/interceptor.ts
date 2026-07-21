@@ -1,7 +1,10 @@
 import type { ListingData, ExtractedListing } from "./types";
+import { waitForDOM } from "./dom-extractor";
 
 const GRAPHQL_ENDPOINT = "https://api.ouedkniss.com/graphql";
 const EVENT_NAME = "knissradar:listings-data";
+
+let graphqlDataReceived = false;
 
 function extractListingData(data: ListingData): ExtractedListing {
   const specs: Record<string, string> = {};
@@ -74,6 +77,7 @@ window.fetch = async function (
         .json()
         .then((body) => {
           if (isAnnouncementGetResponse(body)) {
+            graphqlDataReceived = true;
             const listing = extractListingData(body.data.announcement);
             emitListingData(listing);
           }
@@ -89,4 +93,32 @@ window.fetch = async function (
   return originalFetch.call(this, input, init);
 };
 
-export { EVENT_NAME, extractListingData };
+function initDOMFallback(): void {
+  if (graphqlDataReceived) return;
+
+  waitForDOM((listing) => {
+    if (listing && !graphqlDataReceived) {
+      emitListingData(listing);
+    }
+  }, 20, 500);
+}
+
+const observer = new MutationObserver(() => {
+  if (!graphqlDataReceived) {
+    initDOMFallback();
+  }
+});
+
+observer.observe(document.body, {
+  childList: true,
+  subtree: true,
+});
+
+setTimeout(() => {
+  observer.disconnect();
+  if (!graphqlDataReceived) {
+    initDOMFallback();
+  }
+}, 5000);
+
+export { EVENT_NAME, extractListingData, initDOMFallback };
