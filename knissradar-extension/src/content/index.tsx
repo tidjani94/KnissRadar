@@ -2,6 +2,7 @@ import React from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { Widget } from "../widgets/Widget";
 import "../widgets/tailwind.css";
+import "../shared/interceptor";
 
 const WIDGET_ID = "kniss-radar-root";
 let root: Root | null = null;
