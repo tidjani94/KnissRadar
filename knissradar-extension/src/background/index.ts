@@ -7,6 +7,11 @@ chrome.runtime.onInstalled.addListener(() => {
   console.log("KnissRadar extension installed");
 });
 
+// Create notification channel for price drops
+chrome.alarms.create("price-check", {
+  periodInMinutes: 15,
+});
+
 chrome.alarms.create("telemetry-flush", {
   periodInMinutes: 0.5,
 });
@@ -30,6 +35,17 @@ chrome.runtime.onMessage.addListener(
         .catch(() => sendResponse({ ok: false }));
       return true;
     }
+
+    if (message.type === "SHOW_NOTIFICATION") {
+      const data = message.data as {
+        title: string;
+        message: string;
+        url?: string;
+      };
+      showNotification(data.title, data.message, data.url);
+      sendResponse({ ok: true });
+      return false;
+    }
   }
 );
 
@@ -39,6 +55,46 @@ chrome.alarms.onAlarm.addListener((alarm) => {
       console.error("Telemetry flush failed:", err)
     );
   }
+
+  if (alarm.name === "price-check") {
+    checkPriceDrops().catch((err) =>
+      console.error("Price check failed:", err)
+    );
+  }
+});
+
+function showNotification(
+  title: string,
+  message: string,
+  url?: string
+): void {
+  chrome.notifications.create(
+    `knissradar-${Date.now()}`,
+    {
+      type: "basic",
+      iconUrl: "icons/icon128.png",
+      title,
+      message,
+      priority: 2,
+    },
+    (notificationId) => {
+      if (url) {
+        // Store URL for click handler
+        chrome.storage.local.set({ [`notification_${notificationId}`]: url });
+      }
+    }
+  );
+}
+
+chrome.notifications.onClicked.addListener((notificationId) => {
+  chrome.storage.local.get(`notification_${notificationId}`, (result) => {
+    const url = result[`notification_${notificationId}`];
+    if (url) {
+      chrome.tabs.create({ url });
+      chrome.storage.local.remove(`notification_${notificationId}`);
+    }
+  });
+  chrome.notifications.clear(notificationId);
 });
 
 async function getBuffer(): Promise<unknown[]> {
@@ -86,5 +142,33 @@ async function flushTelemetry(): Promise<{ ok: boolean; upserted?: number }> {
   } catch (err) {
     console.error("Telemetry API error:", err);
     return { ok: false };
+  }
+}
+
+async function checkPriceDrops(): Promise<void> {
+  try {
+    // Get all watchlist items from local storage
+    const result = await chrome.storage.local.get("knissradar_watchlist");
+    const watchlist = (result.knissradar_watchlist as Array<{
+      listingId: string;
+      title: string;
+      targetPrice: number;
+      currentPrice: number;
+    }>) ?? [];
+
+    if (watchlist.length === 0) return;
+
+    // Check each item for price drops
+    for (const item of watchlist) {
+      if (item.currentPrice <= item.targetPrice) {
+        showNotification(
+          "🔔 Prix baisé!",
+          `${item.title}\nPrix actuel: ${item.currentPrice.toLocaleString("fr-DZ")} DA`,
+          `https://ouedkniss.com/annonce/${item.listingId}`
+        );
+      }
+    }
+  } catch (err) {
+    console.error("Price drop check error:", err);
   }
 }
