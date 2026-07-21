@@ -59,3 +59,65 @@ export async function fetchListingHistory(
     return [];
   }
 }
+
+interface WatchlistItem {
+  id: number;
+  listing_id: string;
+  target_price: number;
+  title: string;
+  current_price: number;
+}
+
+export async function fetchWatchlist(
+  fingerprint: string
+): Promise<WatchlistItem[]> {
+  try {
+    const response = await fetch(
+      `${API_BASE}/api/v1/watchlist?fingerprint=${encodeURIComponent(fingerprint)}`
+    );
+    if (!response.ok) return [];
+
+    const data = (await response.json()) as { watchlist: WatchlistItem[] };
+    return data.watchlist ?? [];
+  } catch {
+    return [];
+  }
+}
+
+export async function addToServerWatchlist(
+  fingerprint: string,
+  listingId: string,
+  targetPrice: number
+): Promise<{ ok: boolean; id?: number }> {
+  try {
+    const response = await fetch(`${API_BASE}/api/v1/watchlist`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fingerprint, listingId, targetPrice }),
+    });
+    if (!response.ok) return { ok: false };
+
+    const data = (await response.json()) as { ok: boolean; id: number };
+    return data;
+  } catch {
+    return { ok: false };
+  }
+}
+
+export async function removeFromServerWatchlist(
+  id: number,
+  fingerprint: string
+): Promise<{ ok: boolean }> {
+  try {
+    const response = await fetch(`${API_BASE}/api/v1/watchlist/${id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fingerprint }),
+    });
+    if (!response.ok) return { ok: false };
+
+    return { ok: true };
+  } catch {
+    return { ok: false };
+  }
+}

@@ -7,6 +7,7 @@ import { listingsRoutes } from "./routes/listings.js";
 import { telemetryRoutes } from "./routes/telemetry.js";
 import { groupsRoutes } from "./routes/groups.js";
 import { groupMatchRoutes } from "./routes/group-match.js";
+import { watchlistRoutes } from "./routes/watchlist.js";
 
 const app = Fastify({
   logger: {
@@ -34,6 +35,7 @@ await app.register(listingsRoutes, { prefix: "/api/v1/listings" });
 await app.register(telemetryRoutes, { prefix: "/api/v1/telemetry" });
 await app.register(groupsRoutes, { prefix: "/api/v1/groups" });
 await app.register(groupMatchRoutes, { prefix: "/api/v1/groups" });
+await app.register(watchlistRoutes, { prefix: "/api/v1/watchlist" });
 
 const port = parseInt(process.env.PORT ?? "3000", 10);
 const host = process.env.HOST ?? "0.0.0.0";
