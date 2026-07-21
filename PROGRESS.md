@@ -7,7 +7,7 @@
 | Sprint | Milestone | Issues | Status |
 |--------|-----------|--------|--------|
 | Sprint 1 | Extension Core | #1-8 | Not started |
-| Sprint 2 | Backend Pipeline | #9-16 | In Progress |
+| Sprint 2 | Backend Pipeline | #9-16 | Done |
 | Sprint 3 | Telegram Alerts | #17-23 | Not started |
 | Sprint 4 | Partner Ads & Beta | #24-32 | Not started |
 
