@@ -1,6 +1,7 @@
 import type { FastifyInstance } from "fastify";
 import { pool } from "../db/pool.js";
 import crypto from "crypto";
+import { createChargilyCheckout, verifyChargilyPayment } from "../lib/chargily.js";
 
 async function authenticatePartner(
   apiKey: string
@@ -199,5 +200,81 @@ export async function partnerRoutes(app: FastifyInstance): Promise<void> {
     );
 
     return { payments: rows };
+  });
+
+  // Create payment with Chargily
+  app.post("/payments/create", async (request, reply) => {
+    const apiKey = (request.headers["x-api-key"] as string) ?? "";
+    const partner = await authenticatePartner(apiKey);
+
+    if (!partner) {
+      return reply.status(401).send({ error: "Invalid API key" });
+    }
+
+    const { amount, paymentMethod, description } = request.body as {
+      amount?: number;
+      paymentMethod?: "cib" | "edahabia";
+      description?: string;
+    };
+
+    if (!amount || !paymentMethod) {
+      return reply.status(400).send({ error: "Missing required fields" });
+    }
+
+    if (amount < 500) {
+      return reply.status(400).send({ error: "Minimum payment is 500 DA" });
+    }
+
+    const checkout = await createChargilyCheckout({
+      amount,
+      description: description ?? `KnissRadar Pro - ${partner.name}`,
+      partnerId: partner.id,
+      paymentMethod,
+    });
+
+    if (!checkout) {
+      return reply.status(500).send({ error: "Payment creation failed" });
+    }
+
+    return {
+      checkoutId: checkout.id,
+      checkoutUrl: checkout.checkout_url,
+      amount: checkout.amount / 100, // Convert back from centimes
+    };
+  });
+
+  // Verify payment status
+  app.post("/payments/verify", async (request, reply) => {
+    const apiKey = (request.headers["x-api-key"] as string) ?? "";
+    const partner = await authenticatePartner(apiKey);
+
+    if (!partner) {
+      return reply.status(401).send({ error: "Invalid API key" });
+    }
+
+    const { checkoutId } = request.body as { checkoutId?: string };
+
+    if (!checkoutId) {
+      return reply.status(400).send({ error: "Missing checkoutId" });
+    }
+
+    const result = await verifyChargilyPayment(checkoutId);
+
+    if (!result) {
+      return reply.status(500).send({ error: "Verification failed" });
+    }
+
+    // If payment completed, upgrade partner tier
+    if (result.status === "paid") {
+      await pool.query(
+        `UPDATE partners SET tier = 'pro', updated_at = NOW() WHERE id = $1`,
+        [partner.id]
+      );
+    }
+
+    return {
+      status: result.status,
+      amount: result.amount / 100,
+    };
   });
 }
