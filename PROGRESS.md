@@ -53,15 +53,15 @@
 
 | Issue | Title | Assignee | Status |
 |-------|-------|----------|--------|
-| #24 | Partner dashboard (knissradar.dz/partner) | — | Not started |
-| #25 | Chargily Pay integration (CIB/EDAHABIA) | — | Not started |
-| #26 | Sponsored deal placement in Smart Compare | — | Not started |
-| #27 | Impression and click tracking | — | Not started |
-| #28 | Partner analytics page | — | Not started |
-| #29 | Free/Pro tier gating | — | Not started |
-| #30 | Chrome Web Store submission | — | Not started |
-| #31 | Beta testing with 50 invited users | — | Not started |
-| #32 | Landing page (knissradar.dz) | — | Not started |
+| #24 | Partner dashboard (knissradar.dz/partner) | @tidjani94 | Done |
+| #25 | Chargily Pay integration (CIB/EDAHABIA) | @tidjani94 | Done |
+| #26 | Sponsored deal placement in Smart Compare | @tidjani94 | Done |
+| #27 | Impression and click tracking | @tidjani94 | Done |
+| #28 | Partner analytics page | @tidjani94 | Done |
+| #29 | Free/Pro tier gating | @tidjani94 | Done |
+| #30 | Chrome Web Store submission | @tidjani94 | Done |
+| #31 | Beta testing with 50 invited users | @tidjani94 | Done |
+| #32 | Landing page (knissradar.dz) | @tidjani94 | Done |
 
 ## How to Update
 
