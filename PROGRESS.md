@@ -33,7 +33,7 @@
 | #11 | Implement telemetry endpoint with UPSERT logic | @tidjani94 | Done |
 | #12 | Build product group matching engine | @tidjani94 | Done |
 | #13 | BullMQ workers: product-group-agg + stale-listing-cleanup | @tidjani94 | Done |
-| #14 | Extension telemetry sender (service worker) | — | Not started |
+| #14 | Extension telemetry sender (service worker) | @tidjani94 | Done |
 | #15 | Migrate watchlist to backend API | — | Not started |
 | #16 | Replace local price history with API calls | — | Not started |
 
