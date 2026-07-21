@@ -74,14 +74,43 @@ function Popup(): React.ReactElement {
   const [watchlist, setWatchlist] = React.useState<WatchlistItem[]>([]);
   const [notifications, setNotifications] = React.useState(true);
   const [language, setLanguage] = React.useState<"fr" | "ar">("fr");
+  const [telegramChatId, setTelegramChatId] = React.useState("");
+  const [telegramLinked, setTelegramLinked] = React.useState(false);
+  const [telegramLoading, setTelegramLoading] = React.useState(false);
 
   React.useEffect(() => {
     getWatchlist().then(setWatchlist);
+    // Check if Telegram is linked
+    chrome.storage.local.get(["telegramChatId"], (result) => {
+      if (result.telegramChatId) {
+        setTelegramLinked(true);
+        setTelegramChatId(result.telegramChatId);
+      }
+    });
   }, []);
 
   async function handleRemove(id: string): Promise<void> {
     await removeFromWatchlist(id);
     setWatchlist((prev) => prev.filter((item) => item.listingId !== id));
+  }
+
+  async function handleLinkTelegram(): Promise<void> {
+    if (!telegramChatId.trim()) return;
+
+    setTelegramLoading(true);
+    try {
+      // Store the chat ID locally
+      await chrome.storage.local.set({ telegramChatId: telegramChatId.trim() });
+      setTelegramLinked(true);
+    } finally {
+      setTelegramLoading(false);
+    }
+  }
+
+  async function handleUnlinkTelegram(): Promise<void> {
+    await chrome.storage.local.remove(["telegramChatId"]);
+    setTelegramLinked(false);
+    setTelegramChatId("");
   }
 
   function handleOpenWebsite(): void {
@@ -190,6 +219,59 @@ function Popup(): React.ReactElement {
               </button>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-sm font-medium text-gray-400 mb-3">
+          {language === "fr" ? "Notifications Telegram" : "إشعارات تيليجرام"}
+        </h2>
+        <div className="bg-[#16213E] rounded-lg p-3">
+          {telegramLinked ? (
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span className="text-sm text-green-400">
+                  {language === "fr" ? "Connecté" : "متصل"}
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 mb-2">
+                {language === "fr"
+                  ? `Chat ID: ${telegramChatId}`
+                  : `معرف المحادثة: ${telegramChatId}`}
+              </p>
+              <button
+                onClick={handleUnlinkTelegram}
+                className="w-full px-3 py-1.5 text-xs bg-red-500/20 text-red-400 rounded cursor-pointer border-0 hover:bg-red-500/30 transition-colors"
+              >
+                {language === "fr" ? "Déconnecter" : "فصل"}
+              </button>
+            </div>
+          ) : (
+            <div>
+              <p className="text-xs text-gray-500 mb-3">
+                {language === "fr"
+                  ? "Envoyez /start au bot @KnissRadarBot sur Telegram, puis entrez votre code ci-dessous:"
+                  : "أرسل /start إلى البوت @KnissRadarBot على تيليجرام، ثم أدخل الرمز أدناه:"}
+              </p>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={telegramChatId}
+                  onChange={(e) => setTelegramChatId(e.target.value)}
+                  placeholder={language === "fr" ? "Chat ID" : "معرف المحادثة"}
+                  className="flex-1 px-3 py-1.5 text-xs bg-[#0F3460] text-white rounded border border-white/10 focus:border-[#FF4D00] focus:outline-none"
+                />
+                <button
+                  onClick={handleLinkTelegram}
+                  disabled={!telegramChatId.trim() || telegramLoading}
+                  className="px-3 py-1.5 text-xs bg-[#FF4D00] text-white rounded cursor-pointer border-0 hover:bg-[#FF6B2B] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {telegramLoading ? "..." : language === "fr" ? "Connecter" : "ربط"}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </section>
     </div>
