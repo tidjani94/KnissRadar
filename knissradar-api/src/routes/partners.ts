@@ -13,6 +13,12 @@ async function authenticatePartner(
   return rows.length > 0 ? rows[0] : null;
 }
 
+const TIER_LIMITS = {
+  free: { banners: 1, campaigns: 0, analytics: false },
+  pro: { banners: 10, campaigns: 5, analytics: true },
+  enterprise: { banners: 100, campaigns: 50, analytics: true },
+};
+
 export async function partnerRoutes(app: FastifyInstance): Promise<void> {
   // Partner registration
   app.post("/register", async (request, reply) => {
@@ -93,6 +99,21 @@ export async function partnerRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(401).send({ error: "Invalid API key" });
     }
 
+    // Check tier limits
+    const limits = TIER_LIMITS[partner.tier as keyof typeof TIER_LIMITS] ?? TIER_LIMITS.free;
+    const { rows: bannerCount } = await pool.query(
+      `SELECT COUNT(*) as count FROM sponsor_banners WHERE partner_name = $1`,
+      [partner.name]
+    );
+
+    if (parseInt(bannerCount[0].count) >= limits.banners) {
+      return reply.status(403).send({
+        error: `Banner limit reached for ${partner.tier} tier`,
+        limit: limits.banners,
+        upgrade: partner.tier !== "enterprise",
+      });
+    }
+
     const { imageUrl, targetUrl, categorySlug, startsAt, endsAt } = request.body as {
       imageUrl?: string;
       targetUrl?: string;
@@ -145,6 +166,15 @@ export async function partnerRoutes(app: FastifyInstance): Promise<void> {
 
     if (!partner) {
       return reply.status(401).send({ error: "Invalid API key" });
+    }
+
+    // Check tier access
+    const limits = TIER_LIMITS[partner.tier as keyof typeof TIER_LIMITS] ?? TIER_LIMITS.free;
+    if (!limits.analytics) {
+      return reply.status(403).send({
+        error: "Analytics requires Pro or Enterprise tier",
+        upgrade: true,
+      });
     }
 
     const { days } = request.query as { days?: string };
