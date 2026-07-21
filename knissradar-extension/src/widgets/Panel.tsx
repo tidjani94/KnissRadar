@@ -1,5 +1,6 @@
 import React from "react";
 import type { ExtractedListing } from "../shared/types";
+import { PriceGraph } from "./PriceGraph";
 
 interface PanelProps {
   listing: ExtractedListing | null;
@@ -86,25 +87,8 @@ export function Panel({ listing, onClose }: PanelProps): React.ReactElement {
               </div>
             </div>
 
-            <div className="bg-kniss-navy-light rounded-lg p-3 mb-4">
-              <h3 className="text-gray-400 text-xs font-medium mb-2 uppercase tracking-wider">
-                Price History
-              </h3>
-              <div className="text-center text-gray-500 text-xs py-4">
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  className="mx-auto mb-2 text-gray-600"
-                >
-                  <path d="M3 3v18h18" />
-                  <path d="M7 16l4-8 4 4 4-10" />
-                </svg>
-                Price graph coming soon
-              </div>
+            <div className="mb-4">
+              <PriceGraph prices={[]} currentPrice={listing.price} />
             </div>
 
             {Object.keys(listing.specs).length > 0 && (

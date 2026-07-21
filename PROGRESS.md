@@ -19,7 +19,7 @@
 | #2 | Implement Shadow DOM injection on listing pages | @tidjani94 | Done |
 | #3 | Build GraphQL interceptor for listing data | @tidjani94 | Done |
 | #4 | DOM fallback extractor with versioned selectors | @tidjani94 | Done |
-| #5 | Build PriceGraph widget with Chart.js | — | Not started |
+| #5 | Build PriceGraph widget with Chart.js | @tidjani94 | Done |
 | #6 | Build TrackPriceDrop form | — | Not started |
 | #7 | Local storage watchlist with chrome.storage.local | — | Not started |
 | #8 | Build extension popup UI | — | Not started |
