@@ -12,6 +12,7 @@ import {
   Legend,
 } from "chart.js";
 import type { PricePoint } from "../shared/types";
+import { fetchListingHistory } from "../shared/api-client";
 
 ChartJS.register(
   CategoryScale,
@@ -27,6 +28,7 @@ ChartJS.register(
 type TimeRange = 7 | 30 | 90;
 
 interface PriceGraphProps {
+  listingId: string;
   prices: PricePoint[];
   currentPrice: number;
 }
@@ -92,13 +94,27 @@ function generateSampleData(): PricePoint[] {
 }
 
 export function PriceGraph({
+  listingId,
   prices,
   currentPrice,
 }: PriceGraphProps): React.ReactElement {
   const [selectedRange, setSelectedRange] = React.useState<TimeRange>(30);
+  const [fetchedPrices, setFetchedPrices] = React.useState<PricePoint[]>([]);
+
+  React.useEffect(() => {
+    if (prices.length > 0 || !listingId) return;
+
+    fetchListingHistory(listingId, 90)
+      .then((history) => {
+        setFetchedPrices(
+          history.map((p) => ({ price: p.price, timestamp: p.timestamp }))
+        );
+      })
+      .catch(() => {});
+  }, [listingId, prices.length]);
 
   const displayPrices =
-    prices.length > 0 ? prices : generateSampleData();
+    prices.length > 0 ? prices : fetchedPrices.length > 0 ? fetchedPrices : generateSampleData();
   const filtered = filterByRange(displayPrices, selectedRange);
   const aggregated = aggregateByDay(filtered);
 

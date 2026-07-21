@@ -35,7 +35,7 @@
 | #13 | BullMQ workers: product-group-agg + stale-listing-cleanup | @tidjani94 | Done |
 | #14 | Extension telemetry sender (service worker) | @tidjani94 | Done |
 | #15 | Migrate watchlist to backend API | @tidjani94 | Done |
-| #16 | Replace local price history with API calls | — | Not started |
+| #16 | Replace local price history with API calls | @tidjani94 | Done |
 
 ## Sprint 3: Telegram Alerts (7 issues)
 

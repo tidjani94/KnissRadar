@@ -89,7 +89,7 @@ export function Panel({ listing, onClose }: PanelProps): React.ReactElement {
             </div>
 
             <div className="mb-4">
-              <PriceGraph prices={[]} currentPrice={listing.price} />
+              <PriceGraph listingId={listing.id} prices={[]} currentPrice={listing.price} />
             </div>
 
             {Object.keys(listing.specs).length > 0 && (
