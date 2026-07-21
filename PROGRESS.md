@@ -22,7 +22,7 @@
 | #5 | Build PriceGraph widget with Chart.js | @tidjani94 | Done |
 | #6 | Build TrackPriceDrop form | @tidjani94 | Done |
 | #7 | Local storage watchlist with chrome.storage.local | @tidjani94 | Done |
-| #8 | Build extension popup UI | — | Not started |
+| #8 | Build extension popup UI | @tidjani94 | Done |
 
 ## Sprint 2: Backend Pipeline (8 issues)
 
