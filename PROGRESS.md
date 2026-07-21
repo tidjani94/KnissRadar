@@ -28,7 +28,7 @@
 
 | Issue | Title | Assignee | Status |
 |-------|-------|----------|--------|
-| #9 | Provision infrastructure (Neon, Upstash, Railway) | — | Not started |
+| #9 | Provision infrastructure (Neon, Upstash, Railway) | @tidjani94 | Done |
 | #10 | Deploy Fastify API with core endpoints | @tidjani94 | Done |
 | #11 | Implement telemetry endpoint with UPSERT logic | @tidjani94 | Done |
 | #12 | Build product group matching engine | @tidjani94 | Done |
