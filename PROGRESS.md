@@ -7,7 +7,7 @@
 | Sprint | Milestone | Issues | Status |
 |--------|-----------|--------|--------|
 | Sprint 1 | Extension Core | #1-8 | Not started |
-| Sprint 2 | Backend Pipeline | #9-16 | Not started |
+| Sprint 2 | Backend Pipeline | #9-16 | In Progress |
 | Sprint 3 | Telegram Alerts | #17-23 | Not started |
 | Sprint 4 | Partner Ads & Beta | #24-32 | Not started |
 
@@ -29,7 +29,7 @@
 | Issue | Title | Assignee | Status |
 |-------|-------|----------|--------|
 | #9 | Provision infrastructure (Neon, Upstash, Railway) | — | Not started |
-| #10 | Deploy Fastify API with core endpoints | — | Not started |
+| #10 | Deploy Fastify API with core endpoints | @tidjani94 | Done |
 | #11 | Implement telemetry endpoint with UPSERT logic | — | Not started |
 | #12 | Build product group matching engine | — | Not started |
 | #13 | BullMQ workers: product-group-agg + stale-listing-cleanup | — | Not started |
