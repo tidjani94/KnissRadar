@@ -77,6 +77,12 @@ function Popup(): React.ReactElement {
   const [telegramChatId, setTelegramChatId] = React.useState("");
   const [telegramLinked, setTelegramLinked] = React.useState(false);
   const [telegramLoading, setTelegramLoading] = React.useState(false);
+  const [alertHistory, setAlertHistory] = React.useState<Array<{
+    id: string;
+    title: string;
+    price: number;
+    timestamp: number;
+  }>>([]);
 
   React.useEffect(() => {
     getWatchlist().then(setWatchlist);
@@ -85,6 +91,12 @@ function Popup(): React.ReactElement {
       if (result.telegramChatId) {
         setTelegramLinked(true);
         setTelegramChatId(result.telegramChatId);
+      }
+    });
+    // Load alert history
+    chrome.storage.local.get(["alert_history"], (result) => {
+      if (result.alert_history) {
+        setAlertHistory(result.alert_history);
       }
     });
   }, []);
@@ -270,6 +282,52 @@ function Popup(): React.ReactElement {
                   {telegramLoading ? "..." : language === "fr" ? "Connecter" : "ربط"}
                 </button>
               </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-sm font-medium text-gray-400 mb-3">
+          {language === "fr" ? "Historique des alertes" : "سجل التنبيهات"}
+        </h2>
+        <div className="bg-[#16213E] rounded-lg p-3">
+          {alertHistory.length === 0 ? (
+            <div className="text-center text-gray-500 text-sm py-2">
+              {language === "fr"
+                ? "Aucune alerte pour le moment."
+                : "لا توجد تنبيهات بعد."}
+            </div>
+          ) : (
+            <div className="space-y-2 max-h-48 overflow-y-auto">
+              {alertHistory.slice(0, 10).map((alert) => (
+                <div
+                  key={alert.id}
+                  className="bg-[#0F3460] rounded p-2 cursor-pointer hover:bg-[#1a4a7a] transition-colors"
+                  onClick={() => {
+                    chrome.tabs.create({
+                      url: `https://ouedkniss.com/annonce/${alert.id}`,
+                    });
+                  }}
+                >
+                  <div className="flex justify-between items-start mb-1">
+                    <span className="text-white text-xs font-medium line-clamp-1 flex-1 mr-2">
+                      {alert.title}
+                    </span>
+                    <span className="text-[#FF4D00] text-xs font-bold">
+                      {formatPrice(alert.price)}
+                    </span>
+                  </div>
+                  <div className="text-gray-500 text-xs">
+                    {new Date(alert.timestamp).toLocaleDateString("fr-DZ", {
+                      day: "numeric",
+                      month: "short",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>

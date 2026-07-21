@@ -81,9 +81,51 @@ function showNotification(
       if (url) {
         // Store URL for click handler
         chrome.storage.local.set({ [`notification_${notificationId}`]: url });
+
+        // Save to alert history
+        saveAlertToHistory(title, message, url);
       }
     }
   );
+}
+
+async function saveAlertToHistory(
+  title: string,
+  message: string,
+  url: string
+): Promise<void> {
+  try {
+    const result = await chrome.storage.local.get("alert_history");
+    const history = (result.alert_history as Array<{
+      id: string;
+      title: string;
+      price: number;
+      timestamp: number;
+    }>) ?? [];
+
+    // Extract price from message if present
+    const priceMatch = message.match(/(\d[\d\s]*)\s*DA/);
+    const price = priceMatch?.[1]
+      ? parseInt(priceMatch[1].replace(/\s/g, ""), 10)
+      : 0;
+
+    // Extract listing ID from URL
+    const listingId = url.split("/").pop() ?? "";
+
+    // Add new alert to beginning
+    history.unshift({
+      id: listingId,
+      title: title.replace("🔔 ", ""),
+      price,
+      timestamp: Date.now(),
+    });
+
+    // Keep only last 50 alerts
+    const trimmedHistory = history.slice(0, 50);
+    await chrome.storage.local.set({ alert_history: trimmedHistory });
+  } catch (err) {
+    console.error("Failed to save alert history:", err);
+  }
 }
 
 chrome.notifications.onClicked.addListener((notificationId) => {
