@@ -1,6 +1,7 @@
 import React from "react";
 import type { ExtractedListing } from "../shared/types";
 import { PriceGraph } from "./PriceGraph";
+import { TrackPriceDrop } from "./TrackPriceDrop";
 
 interface PanelProps {
   listing: ExtractedListing | null;
@@ -129,9 +130,13 @@ export function Panel({ listing, onClose }: PanelProps): React.ReactElement {
       </main>
 
       <footer className="p-3 border-t border-white/10">
-        <button className="w-full py-2 px-4 bg-kniss-orange text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity cursor-pointer border-0">
-          {listing ? "Track this listing" : "Waiting for listing data..."}
-        </button>
+        {listing ? (
+          <TrackPriceDrop listing={listing} />
+        ) : (
+          <button className="w-full py-2 px-4 bg-kniss-orange text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity cursor-pointer border-0">
+            Waiting for listing data...
+          </button>
+        )}
       </footer>
     </div>
   );

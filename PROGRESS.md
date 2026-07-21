@@ -20,7 +20,7 @@
 | #3 | Build GraphQL interceptor for listing data | @tidjani94 | Done |
 | #4 | DOM fallback extractor with versioned selectors | @tidjani94 | Done |
 | #5 | Build PriceGraph widget with Chart.js | @tidjani94 | Done |
-| #6 | Build TrackPriceDrop form | — | Not started |
+| #6 | Build TrackPriceDrop form | @tidjani94 | Done |
 | #7 | Local storage watchlist with chrome.storage.local | — | Not started |
 | #8 | Build extension popup UI | — | Not started |
 
