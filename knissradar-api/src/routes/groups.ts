@@ -39,6 +39,49 @@ export async function groupsRoutes(app: FastifyInstance): Promise<void> {
     return { groups: rows, page: pageNum, limit };
   });
 
+  // Get sponsored banners for a category (for Smart Compare)
+  app.get("/sponsors", async (request) => {
+    const { category } = request.query as { category?: string };
+
+    let sql = `SELECT id, partner_name, image_url, target_url, category_slug
+               FROM sponsor_banners
+               WHERE is_active = TRUE
+                 AND (starts_at IS NULL OR starts_at <= NOW())
+                 AND (ends_at IS NULL OR ends_at >= NOW())`;
+    const params: unknown[] = [];
+
+    if (category) {
+      params.push(category);
+      sql += ` AND (category_slug = $1 OR category_slug IS NULL)`;
+    }
+
+    sql += ` ORDER BY RANDOM() LIMIT 3`;
+
+    const { rows } = await pool.query(sql, params);
+
+    // Increment impression count
+    for (const banner of rows) {
+      await pool.query(
+        `UPDATE sponsor_banners SET impressions = impressions + 1 WHERE id = $1`,
+        [banner.id]
+      );
+    }
+
+    return { sponsors: rows };
+  });
+
+  // Track banner click
+  app.post("/sponsors/:id/click", async (request) => {
+    const { id } = request.params as { id: string };
+
+    await pool.query(
+      `UPDATE sponsor_banners SET clicks = clicks + 1 WHERE id = $1`,
+      [id]
+    );
+
+    return { ok: true };
+  });
+
   app.get<{ Params: { id: string } }>("/:id", async (request, reply) => {
     const { id } = request.params as { id: string };
     const { rows } = await pool.query("SELECT * FROM product_groups WHERE id = $1", [id]);
