@@ -36,3 +36,25 @@ export async function getWatchlistItem(
   const watchlist = await getWatchlist();
   return watchlist.find((w) => w.listingId === listingId);
 }
+
+const MAX_HISTORY_ENTRIES = 30;
+
+export async function appendPriceHistory(
+  listingId: string,
+  price: number
+): Promise<void> {
+  const watchlist = await getWatchlist();
+  const item = watchlist.find((w) => w.listingId === listingId);
+  if (!item) return;
+
+  item.history.push({ price, timestamp: new Date().toISOString() });
+
+  if (item.history.length > MAX_HISTORY_ENTRIES) {
+    item.history = item.history.slice(-MAX_HISTORY_ENTRIES);
+  }
+
+  item.currentPrice = price;
+  item.lastChecked = new Date().toISOString();
+
+  await chrome.storage.local.set({ [STORAGE_KEY]: watchlist });
+}
