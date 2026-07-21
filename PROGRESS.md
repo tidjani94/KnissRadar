@@ -41,13 +41,13 @@
 
 | Issue | Title | Assignee | Status |
 |-------|-------|----------|--------|
-| #17 | Create Telegram bot with /start flow | — | Not started |
-| #18 | Alert dispatch worker (BullMQ) | — | Not started |
-| #19 | Telegram alert message formatting | — | Not started |
-| #20 | Extension to Telegram linking flow | — | Not started |
-| #21 | Browser push notifications (chrome.notifications) | — | Not started |
-| #22 | Alert history feed in popup | — | Not started |
-| #23 | Background price checker (server-side cron) | — | Not started |
+| #17 | Create Telegram bot with /start flow | @tidjani94 | Done |
+| #18 | Alert dispatch worker (BullMQ) | @tidjani94 | Done |
+| #19 | Telegram alert message formatting | @tidjani94 | Done |
+| #20 | Extension to Telegram linking flow | @tidjani94 | Done |
+| #21 | Browser push notifications (chrome.notifications) | @tidjani94 | Done |
+| #22 | Alert history feed in popup | @tidjani94 | Done |
+| #23 | Background price checker (server-side cron) | @tidjani94 | Done |
 
 ## Sprint 4: Partner Ads & Beta (9 issues)
 
