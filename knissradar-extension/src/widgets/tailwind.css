@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+@theme {
+  --color-kniss-orange: #FF4D00;
+  --color-kniss-navy: #1A1A2E;
+  --color-kniss-navy-light: #16213E;
+  --color-kniss-surface: #0F3460;
+}
