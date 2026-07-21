@@ -90,6 +90,17 @@ const MIGRATIONS = [
     listings_upserted INTEGER DEFAULT 0,
     received_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
   );`,
+
+  // 008: telegram_users — Telegram bot chat IDs linked to user fingerprints
+  `CREATE TABLE IF NOT EXISTS telegram_users (
+    id SERIAL PRIMARY KEY,
+    chat_id BIGINT NOT NULL UNIQUE,
+    user_fingerprint TEXT NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  );
+  CREATE INDEX IF NOT EXISTS idx_telegram_users_fingerprint ON telegram_users(user_fingerprint);`,
 ];
 
 async function migrate(): Promise<void> {
