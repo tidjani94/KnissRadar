@@ -31,7 +31,7 @@
 | #9 | Provision infrastructure (Neon, Upstash, Railway) | — | Not started |
 | #10 | Deploy Fastify API with core endpoints | @tidjani94 | Done |
 | #11 | Implement telemetry endpoint with UPSERT logic | @tidjani94 | Done |
-| #12 | Build product group matching engine | — | Not started |
+| #12 | Build product group matching engine | @tidjani94 | Done |
 | #13 | BullMQ workers: product-group-agg + stale-listing-cleanup | — | Not started |
 | #14 | Extension telemetry sender (service worker) | — | Not started |
 | #15 | Migrate watchlist to backend API | — | Not started |
