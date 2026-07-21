@@ -8,6 +8,7 @@ import { telemetryRoutes } from "./routes/telemetry.js";
 import { groupsRoutes } from "./routes/groups.js";
 import { groupMatchRoutes } from "./routes/group-match.js";
 import { watchlistRoutes } from "./routes/watchlist.js";
+import { partnerRoutes } from "./routes/partners.js";
 import { initTelegramBot } from "./lib/telegram.js";
 
 const app = Fastify({
@@ -37,6 +38,7 @@ await app.register(telemetryRoutes, { prefix: "/api/v1/telemetry" });
 await app.register(groupsRoutes, { prefix: "/api/v1/groups" });
 await app.register(groupMatchRoutes, { prefix: "/api/v1/groups" });
 await app.register(watchlistRoutes, { prefix: "/api/v1/watchlist" });
+await app.register(partnerRoutes, { prefix: "/api/v1/partner" });
 
 // Initialize Telegram bot if token is provided
 initTelegramBot();

@@ -101,6 +101,49 @@ const MIGRATIONS = [
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
   );
   CREATE INDEX IF NOT EXISTS idx_telegram_users_fingerprint ON telegram_users(user_fingerprint);`,
+
+  // 009: partners — B2B partner accounts
+  `CREATE TABLE IF NOT EXISTS partners (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    api_key TEXT NOT NULL UNIQUE,
+    tier TEXT NOT NULL DEFAULT 'free' CHECK (tier IN ('free', 'pro', 'enterprise')),
+    is_active BOOLEAN DEFAULT TRUE,
+    billing_email TEXT,
+    chargily_customer_id TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  );
+  CREATE INDEX IF NOT EXISTS idx_partners_api_key ON partners(api_key);`,
+
+  // 010: partner_campaigns — ad campaigns per partner
+  `CREATE TABLE IF NOT EXISTS partner_campaigns (
+    id SERIAL PRIMARY KEY,
+    partner_id INTEGER NOT NULL REFERENCES partners(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    banner_id INTEGER REFERENCES sponsor_banners(id) ON DELETE SET NULL,
+    daily_budget INTEGER NOT NULL DEFAULT 0,
+    spent INTEGER NOT NULL DEFAULT 0,
+    is_active BOOLEAN DEFAULT TRUE,
+    starts_at TIMESTAMPTZ,
+    ends_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  );
+  CREATE INDEX IF NOT EXISTS idx_partner_campaigns_partner ON partner_campaigns(partner_id);`,
+
+  // 011: partner_payments — payment history
+  `CREATE TABLE IF NOT EXISTS partner_payments (
+    id SERIAL PRIMARY KEY,
+    partner_id INTEGER NOT NULL REFERENCES partners(id) ON DELETE CASCADE,
+    amount INTEGER NOT NULL,
+    currency TEXT NOT NULL DEFAULT 'DZD',
+    payment_method TEXT NOT NULL CHECK (payment_method IN ('cib', 'edahabia', 'ccp')),
+    chargily_payment_id TEXT,
+    status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'completed', 'failed', 'refunded')),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  );
+  CREATE INDEX IF NOT EXISTS idx_partner_payments_partner ON partner_payments(partner_id);`,
 ];
 
 async function migrate(): Promise<void> {
