@@ -1,0 +1,38 @@
+KnissRadar — Track prices on Ouedkniss.com
+
+Never overpay on Ouedkniss again! KnissRadar tracks price history for any listing and alerts you when prices drop.
+
+**Features:**
+
+📊 **Price History Graph**
+See 7, 30, or 90-day price trends on any listing. Know if you're getting a good deal.
+
+🔔 **Price Drop Alerts**
+Set a target price and get notified via browser notifications or Telegram when the price drops.
+
+📈 **Smart Compare**
+Compare similar products across different sellers to find the best deal.
+
+🌐 **Bilingual**
+Supports French and Arabic (Français / العربية).
+
+**How it works:**
+
+1. Install the extension
+2. Browse ouedkniss.com as usual
+3. Click the orange radar icon on any listing to see price history
+4. Set a target price to get alerts when it drops
+
+**Privacy:**
+
+- We only collect anonymous price data to improve our price tracking
+- No personal information is collected or sold
+- You can opt out of data collection in settings
+
+**Support:**
+
+- Website: knissradar.com
+- Email: support@knissradar.com
+- Telegram: @KnissRadarBot
+
+Made with ❤️ in Algeria 🇩🇿
