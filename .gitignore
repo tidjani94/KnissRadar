@@ -32,6 +32,6 @@ npm-debug.log*
 .crx
 *.crx
 
-Agent.md
+AGENTS.md
 Plan.md
-Progress.md
+PROGRESS.md
