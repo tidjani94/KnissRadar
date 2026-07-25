@@ -31,3 +31,7 @@ npm-debug.log*
 # Chrome extension temp
 .crx
 *.crx
+
+Agent.md
+Plan.md
+Progress.md
